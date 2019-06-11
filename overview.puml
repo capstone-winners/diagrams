@@ -1,0 +1,26 @@
+'Sequence Diagrams For Overall System Flow
+@startuml
+
+actor Bob
+
+Bob -> ClapSwitch: clap()
+ClapSwitch -> Jetson: run()
+Jetson -> Led: trigger_green_light()
+Jetson -> Screen: trigger_waiting_screen()
+Jetson -> Camera: trigger_record()
+Bob -> Camera: perform_gesture()
+Camera -> GestureClassifier: stream()
+GestureClassifier -> Topic: post(gesture)
+Topic -> Screen: gesture_recognized(gesture)
+Topic -> Router: route_gesture()
+Router -> Handler: run()
+Handler -> Screen: action_taken(action)
+Handler -> IoTDevice: run(action)
+IoTDevice --> Bob: event()
+Handler --> Jetson: finish()
+Jetson -> Camera: shutdown()
+Jetson -> Screen: shutdown()
+Jetson -> Led: shutdown()
+Jetson -> Jetson: sleep()
+
+@enduml
