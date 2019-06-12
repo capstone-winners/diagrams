@@ -5,9 +5,17 @@ actor Bob
 
 Bob -> ClapSwitch: clap()
 ClapSwitch -> Jetson: run()
+activate Jetson
+
 Jetson -> Led: trigger_green_light()
+activate Led
+
 Jetson -> Screen: trigger_waiting_screen()
+activate Screen
+
 Jetson -> Camera: trigger_record()
+activate Camera
+
 Bob -> Camera: perform_gesture()
 Camera -> GestureClassifier: stream()
 GestureClassifier -> Topic: post(gesture)
@@ -15,12 +23,21 @@ Topic -> Screen: gesture_recognized(gesture)
 Topic -> Router: route_gesture()
 Router -> Handler: run()
 Handler -> Screen: action_taken(action)
+
+boundary IoTDevice
 Handler -> IoTDevice: run(action)
 IoTDevice --> Bob: event()
 Handler --> Jetson: finish()
 Jetson -> Camera: shutdown()
+deactivate Camera
+
 Jetson -> Screen: shutdown()
+deactivate Screen
+
 Jetson -> Led: shutdown()
+deactivate Led
+
 Jetson -> Jetson: sleep()
+deactivate Jetson
 
 @enduml
