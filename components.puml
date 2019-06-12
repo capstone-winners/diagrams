@@ -1,0 +1,54 @@
+@startuml
+
+package "Jetson" {
+      [Camera PreProcessing] - HTTP
+      HTTP - [Gesture Recognition]
+}
+
+[Gesture Recognition] - GestureTopic
+
+package "GreenGrass Core" {
+    GestureTopic - [Delegator]
+}
+
+[Delegator] -> [SpotifyController]
+[Delegator] -> [LightController]
+[Delegator] -> [ThermostatController]
+
+'TogglePlay -[hidden]- Next
+'Next -[hidden]- Previous
+'Previous -[hidden]- Vup
+'Vup -[hidden]- Vdown
+
+[SpotifyController] - TogglePlay
+[SpotifyController] - Next
+[SpotifyController] - Previous
+[SpotifyController] - Vup
+[SpotifyController] - Vdown
+
+[LightController] - ToggleLight
+
+HeatUp -[hidden]- HeatDown
+[ThermostatController] - HeatUp
+[ThermostatController] - HeatDown
+
+[SpotifyController] -[hidden]- [LightController]
+[LightController] -[hidden]- [ThermostatController]
+
+package "IoT Devices" {
+    [Spotify API] -[hidden]- [Smart Bulb]
+    [Smart Bulb] -[hidden]- [Thermostat]
+
+    TogglePlay  - [Spotify API]
+    Next        - [Spotify API]
+    Previous    - [Spotify API]
+    Vup         - [Spotify API]
+    Vdown       - [Spotify API]
+
+    ToggleLight - [Smart Bulb]
+
+    HeatUp      - [Thermostat]
+    HeatDown    - [Thermostat]
+}
+
+@enduml
